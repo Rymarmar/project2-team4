@@ -1,49 +1,63 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-import type { User } from '../models/models';
-// import { MOCK_USER } from '../services';
-
-// to be replaced with the acutal implementation of authUser
-
-// to be replaced with mock user data from userServices.
-const FAKE_USER: User = {
-  'User Id': 123,
-  'First Name': 'John',
-  'Last Name': 'Smith',
-  'Phone Number': '201-555-1234',
-  'Email': 'johnsmith@example.com',
-  'Username': 'johnsmith',
-};
-
-export interface AuthResult {
-  ok: boolean;
-  error: string | null;
-}
-
-interface AuthContextValue {
-  user: User | null;
-  login: (username: string, password: string) => Promise<AuthResult>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-
-  const value: AuthContextValue = {
-    user,
-    login: async () => {
-      setUser(FAKE_USER)
-      return { ok: true, error: null }
-    },
-    logout: () => setUser(null),
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+import { useState } from "react";
+import * as authService from "./authService.tsx";
+import type { User } from "../models/models";
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');
-  return ctx;
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const login = async (username: string, password: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await authService.login(username, password);
+      const body = await response.body;
+      if (!response.success) {
+        setError(body.error ?? "Login failed");
+        return false;
+      }
+      setUser(body.data);
+      return true;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (email: string, password1: string, password2: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await authService.register(email, password1, password2);
+      const body = await response.body;
+      if (!response.success) {
+        setError(body.error ?? "Registration failed");
+        return false;
+      }
+      setUser(body.data);
+      return true;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    await authService.logout();
+    setUser(null);
+    setLoading(false);
+    setError(null);
+  };
+
+
+  return {
+    user,
+    loading,
+    error,
+    login,
+    logout,
+    register,
+    isAuthenticated: user !== null,
+  };
 }
