@@ -158,3 +158,5 @@ buildNumber.properties
 /data/*
 !/data/*.sql
 /logs/
+frontend/node_modules/
+frontend/dist/
