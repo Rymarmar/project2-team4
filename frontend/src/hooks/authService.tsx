@@ -1,61 +1,36 @@
+import { UserService } from "../service/UserService.ts";
+import type {
+    APIResponse,
+    LoginRequest,
+    RegisterRequest,
+    User,
+} from "../models/models.ts";
 
-import {UserService} from "../service/UserService.ts";
-import type {APIResponse, User} from "../models/models.ts";
-const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-const randomDelay = (min = 500, max = 800) =>
-    delay(Math.floor(Math.random() * (max - min + 1)) + min);
+// The auth service is the one place that talks to UserService. It returns the
+// APIResponse as-is, so callers check `data` / `error` / `status` directly.
+//
+// --- MOCK ADAPTERS ---------------------------------------------------------
+// UserService picks its response from a number, so the credential checks below
+// translate real input into that number. When UserService takes real
+// arguments, delete the checks and forward the request objects instead.
+// ---------------------------------------------------------------------------
 
-
-export async function login(username: string, password: string) {
-    if(username === "johnsmith" && password === "apple123"){
-        const user: Promise<APIResponse<User>> =  UserService.logIn(1);
-        return {
-            success: true,
-            body: user
-        };
-    }
-    else{
-        const user: Promise<APIResponse<User>> =  UserService.logIn(1);
-        return {
-            success: false,
-            body: user
-        };
-    }
+export function login({ Username, Password }: LoginRequest): Promise<APIResponse<User>> {
+    const valid = Username.trim() === "johnsmith" && Password === "apple123";
+    return UserService.logIn(valid ? 1 : 0);
 }
 
-// export async function register(firstName: string, lastName: string, phoneNumber:string,
-//                                username: string, email: string, password1: string, password2: string) {
-    // const requestObject = {
-    //     "FirstName": firstName,
-    //     "LastName": lastName,
-    //     "Email": email,
-    //     "PhoneNumber": phoneNumber,
-    //     "Username": username,
-    //     "Password": password1,
-    //     "Password2": password2
-    // }
-
-export async function register(email: string, password1: string, password2: string){
-    if(password1 !== password2 || !email.includes("@")) {
-        const user: Promise<APIResponse<User>> = UserService.register(0);
-        return {
-            success: false,
-            body: user
-        };
-    }
-    else{
-        const user: Promise<APIResponse<User>> =  UserService.register(1);
-        return {
-            success: true,
-            body: user
-        };
-    }
+export function register(request: RegisterRequest): Promise<APIResponse<User>> {
+    if (request.Password !== request.Password2) return UserService.register(0); // passwords differ
+    if (!request.Email.includes("@")) return UserService.register(-1);          // invalid email
+    return UserService.register(1);
 }
 
-export async function logout() {
-    await randomDelay(500, 800);
-    return {
-        success: true,
-        data: null,
-    };
+/** Checks whether the previously signed-in user still exists. */
+export function getCurrentUser(storedUsername: string): Promise<APIResponse<User>> {
+    return UserService.getUser(storedUsername ? 1 : 0);
+}
+
+export async function logout(): Promise<void> {
+    // No UserService.logout yet. A real backend would invalidate the session here.
 }
