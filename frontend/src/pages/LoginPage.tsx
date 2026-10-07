@@ -44,7 +44,7 @@ function LoginForm() {
     setPasswordInvalid(false);
 
     const isUsernameWrong = username !== "johnsmith";
-    const isPasswordWrong = password !== "mcmagic2404";
+    const isPasswordWrong = password !== "secretpassword123";
 
     if (isUsernameWrong || isPasswordWrong) {
       if (isUsernameWrong) {
