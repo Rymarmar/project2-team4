@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react'
 import { Alert, Col, Container, Row } from 'react-bootstrap'
 import { StatCard } from '../components/StatCard'
 import { TransactionList } from '../components/TransactionList'
-import { AccountService } from '../service/AccountService'
-import { TransactionService } from '../service/TransactionService'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-import type { Account, Transaction } from '../models/models'
+import { AccountService } from '../service/AccountService'
+import { useTransactions } from '../hooks/useTransactions'
+import type { Account } from '../models/models'
 
 export function DashboardPage() {
   const [accounts, setAccounts] = useState<Account[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [transactionsLoading, setTransactionsLoading] = useState(true)
-  const [transactionsError, setTransactionsError] = useState<string | null>(null)
+  const {
+    transactions,
+    loading: transactionsLoading,
+    error: transactionsError,
+  } = useTransactions(5)
 
   // Load account balances.
   useEffect(() => {
@@ -22,7 +24,6 @@ export function DashboardPage() {
 
     async function loadAccounts() {
       try {
-        // 1 selects the mock service's successful response.
         const response = await AccountService.getAccountsByUsername(1)
 
         if (!active) return
@@ -42,52 +43,6 @@ export function DashboardPage() {
     }
 
     void loadAccounts()
-
-    return () => {
-      active = false
-    }
-  }, [])
-
-  // Load the five most recent transactions.
-  useEffect(() => {
-    let active = true
-
-    async function loadTransactions() {
-      try {
-        // 1 selects the mock service's successful response.
-        const response = await TransactionService.getTransactions(1)
-
-        if (!active) return
-
-        if (response.error || !response.data) {
-          setTransactionsError(
-            response.error ?? 'Unable to load transactions.'
-          )
-        } else {
-          // The current mock dates use MM-DD-YYYY.
-          const dateValue = (date: string) => {
-            const [month, day, year] = date.split('-').map(Number)
-            return new Date(year, month - 1, day).getTime()
-          }
-
-          const recentTransactions = [...response.data.Transactions]
-            .sort((a, b) => dateValue(b.Date) - dateValue(a.Date))
-            .slice(0, 5)
-
-          setTransactions(recentTransactions)
-        }
-      } catch {
-        if (active) {
-          setTransactionsError(
-            'Unable to load transactions. Please try again.'
-          )
-        }
-      } finally {
-        if (active) setTransactionsLoading(false)
-      }
-    }
-
-    void loadTransactions()
 
     return () => {
       active = false
