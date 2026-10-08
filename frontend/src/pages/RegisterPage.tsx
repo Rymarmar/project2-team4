@@ -125,7 +125,7 @@ function RegisterForm() {
       <Redirect
         style={{display: "inline-block", padding: "0px 0px 10px"}}
         link="/login"
-        message="Don't have an account? Click here to login"
+        message="Already have an account? Click here to login"
       />
 
       <Button type="submit" variant="primary">Submit</Button>
