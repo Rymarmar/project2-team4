@@ -5,9 +5,13 @@ import { Redirect } from '../components/Redirect.tsx'
 import { UserService } from '../service/UserService'
 import type { User } from '../models/models'
 import { type LoginError, falseLogin } from '../utils/validateLogin.ts'
+import { useAuth } from '../hooks/useAuth.tsx';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/ToastProvider';
 
 // to be replaced with actual login content
 export function LoginPage() {
+
   return (
     <div className="container py-5">
       <h1>Welcome back to W.A.R. Bank</h1>
@@ -33,6 +37,9 @@ export function LoginPage() {
 }
 
 function LoginForm() {
+  const {login} = useAuth();
+  const navigate = useNavigate();
+  const showToast = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -86,8 +93,15 @@ function LoginForm() {
       return; 
     }
 
-    setError("");
-    console.log("Submitted: ", username, password);
+    const status = await login({Username: currentUsername, Password: currentPassword});
+    if (status) {
+      setError("");
+      console.log("Submitted: ", username, password);
+      showToast('success', 'Login success!');
+      navigate('/dashboard');
+    } else {
+      showToast('danger', "Authentication failed");
+    }
   }
 
   return (

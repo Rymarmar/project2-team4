@@ -4,6 +4,7 @@ import { Input } from '../components/Input.tsx'
 import { Form, Button } from 'react-bootstrap'
 import { type RegisterError, falseRegister } from '../utils/validateRegister.ts'
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/ToastProvider';
 
 //to be replaced with actual register content
 export function RegisterPage() {
@@ -20,6 +21,7 @@ export function RegisterPage() {
 
 function RegisterForm() {
   const navigate = useNavigate();
+  const showToast = useToast();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -61,6 +63,7 @@ function RegisterForm() {
 
     setError('');
     console.log('Submitted: ', firstName, lastName, email, phoneNumber, username, password1);
+    showToast('success', 'Account created! Redirecting to login...');
     navigate('/login');
   }
 
