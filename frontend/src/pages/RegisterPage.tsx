@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Redirect } from '../components/Redirect.tsx'
 import { Input } from '../components/Input.tsx'
 import { Form, Button } from 'react-bootstrap'
-import { type RegisterError, validateRegister, falseRegister } from '../utils/validateRegister.ts'
+import { type RegisterError, falseRegister } from '../utils/validateRegister.ts'
+import { useNavigate } from 'react-router-dom';
 
 //to be replaced with actual register content
 export function RegisterPage() {
@@ -18,6 +19,7 @@ export function RegisterPage() {
 }
 
 function RegisterForm() {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -59,6 +61,7 @@ function RegisterForm() {
 
     setError('');
     console.log('Submitted: ', firstName, lastName, email, phoneNumber, username, password1);
+    navigate('/login');
   }
 
   return (

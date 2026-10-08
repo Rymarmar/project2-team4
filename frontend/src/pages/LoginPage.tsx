@@ -1,4 +1,3 @@
-import { AuthCard } from '../components/AuthCard.tsx';
 import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { Input } from '../components/Input.tsx'; // Adjust the import path based on your file structure
