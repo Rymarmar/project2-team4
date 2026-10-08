@@ -1,4 +1,5 @@
-import type {APIResponse, Transaction, TransactionList} from "../models/models.ts";
+import type {APIResponse, Transaction, TransactionList, TransactionRequest} from "../models/models.ts";
+import { MOCK_ACCOUNTS } from './AccountService';
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 const randomDelay = (min = 500, max = 800) =>
@@ -25,8 +26,54 @@ export const MOCK_TRANSACTIONS: TransactionList = {
 
 
 export class TransactionService {
-    static async putTransaction(input: number): Promise<APIResponse<Transaction>> {
+    static async putTransaction(input: number | TransactionRequest): Promise<APIResponse<Transaction>> {
         await randomDelay();
+        if (typeof input !== 'number') {
+            const { TransactionType: type, Amount: amount, OriginID: originId, DestinationID: destinationId } = input;
+            const origin = MOCK_ACCOUNTS.Accounts.find((account) => account.AccountNumber === originId);
+            const destination = MOCK_ACCOUNTS.Accounts.find((account) => account.AccountNumber === destinationId);
+            const fail = (error: string, status = 400): APIResponse<Transaction> => ({ data: null, error, status });
+            const cents = Math.round(amount * 100);
+
+            if (!Number.isFinite(amount) || amount <= 0 || !Number.isSafeInteger(cents)
+                || (amount * 100) % 1 !== 0) {
+                return fail('Enter a positive amount with up to two decimal places.');
+            }
+            if (!['Deposit', 'Withdraw', 'Transfer'].includes(type)) {
+                return fail('Select a valid transaction type.');
+            }
+            if (type !== 'Deposit' && !origin) {
+                return fail('The source account is not available.', 403);
+            }
+            if (type !== 'Withdraw' && !destination) {
+                return fail('The destination account is not available.', 403);
+            }
+            if ((type === 'Deposit' && originId !== null)
+                || (type === 'Withdraw' && destinationId !== null)) {
+                return fail('Invalid account fields for this transaction type.');
+            }
+            if (type === 'Transfer' && originId === destinationId) {
+                return fail('Choose a different destination account.');
+            }
+            if (type !== 'Deposit' && origin && cents > Math.round(origin.Balance * 100)) {
+                return fail('Insufficient funds in the selected account.');
+            }
+
+            // Store balances in the mock service so a subsequent account fetch sees the change.
+            if (type !== 'Deposit' && origin) {
+                origin.Balance = (Math.round(origin.Balance * 100) - cents) / 100;
+            }
+            if (type !== 'Withdraw' && destination) {
+                destination.Balance = (Math.round(destination.Balance * 100) + cents) / 100;
+            }
+            const now = new Date();
+            const transaction: Transaction = {
+                ...input,
+                Date: `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${now.getFullYear()}`,
+            };
+            MOCK_TRANSACTIONS.Transactions.push(transaction);
+            return { data: transaction, error: null, status: 201 };
+        }
         if(input === 1){
             return {
                 data: MOCK_TRANSACTION,
