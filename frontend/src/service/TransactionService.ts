@@ -13,7 +13,7 @@ export const MOCK_TRANSACTION: Transaction = {
     "DestinationID": 9876543211,
     "ID" : 1
 }
-export let MOCK_TRANSACTIONS: TransactionList = {
+export const MOCK_TRANSACTIONS: TransactionList = {
 
     "Transactions": [
         {"Date": "10-01-2026", "TransactionType": "Deposit", "Amount": 21000.00, "OriginID": null, "DestinationID": 9876543211, "ID" : 1},
@@ -31,7 +31,7 @@ export class TransactionService {
         if(input === 1){
             const newID =   Math.max(...(MOCK_TRANSACTIONS.Transactions).map(item => item.ID)) + 1;
 
-            let newMockTransaction = {"Date": "10-09-2026", "TransactionType": newTransaction.TransactionType,
+            const newMockTransaction = {"Date": "10-09-2026", "TransactionType": newTransaction.TransactionType,
                 "Amount": newTransaction.Amount, "OriginID": newTransaction.OriginID, "DestinationID": newTransaction.DestinationID, "ID": newID
             };
             MOCK_TRANSACTIONS.Transactions.push(newMockTransaction)
@@ -77,7 +77,7 @@ export class TransactionService {
         if(numTransactions > MOCK_TRANSACTIONS.Transactions.length){
             numTransactions = MOCK_TRANSACTIONS.Transactions.length
         }
-        let clonedTransactions = structuredClone(MOCK_TRANSACTIONS);
+        const clonedTransactions = structuredClone(MOCK_TRANSACTIONS);
         clonedTransactions.Transactions.sort((a, b) => b.ID - a.ID);
         if(input === 1) {
             return {
