@@ -4,7 +4,8 @@ import { Form, Button } from 'react-bootstrap';
 import { Input } from '../components/Input.tsx'; // Adjust the import path based on your file structure
 import { Redirect } from '../components/Redirect.tsx'
 import { UserService } from '../service/UserService'
-import type { User, RegisterRequest, LoginRequest } from '../models/models'
+import type { User } from '../models/models'
+import { type LoginError, falseLogin } from '../utils/validateLogin.ts'
 
 // to be replaced with actual login content
 export function LoginPage() {
@@ -36,10 +37,8 @@ function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [usernameInvalid, setUsernameInvalid] = useState(false);
-  const [passwordInvalid, setPasswordInvalid] = useState(false);
-
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [loginErrors, setLoginErrors] = useState<LoginError | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -70,30 +69,25 @@ function LoginForm() {
     };
   }, []);
 
-  const handleSubmit = (e : React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!user) {
-      setError("User data is still loading.")
-      return
+    const currentUsername = username.trim();
+    const currentPassword = password.trim();
+
+    const freshErrors: LoginError = {
+      Username : currentUsername === "" ? "Username is not present" : "",
+      Password : currentPassword === "" ? "Password is not present" : ""
     }
 
-    setUsernameInvalid(false);
-    setPasswordInvalid(false);
+    setLoginErrors(freshErrors);
 
-    const isUsernameWrong = username !== user.Username;
-    const isPasswordWrong = password !== "secretpassword123";
-
-    if (isUsernameWrong || isPasswordWrong) {
-      if (isUsernameWrong) {
-        setUsernameInvalid(true);
-        return;
-      } else if (isPasswordWrong) {
-        setPasswordInvalid(true);
-      }
-      return;
+    if (falseLogin(freshErrors)) {
+      setError("Please fill out all required fields.");
+      return; 
     }
 
+    setError("");
     console.log("Submitted: ", username, password);
   }
 
@@ -107,9 +101,8 @@ function LoginForm() {
         value={username}
         onChange={(e) => {
           setUsername(e.target.value);
-          setUsernameInvalid(false);
         }}
-        error={usernameInvalid ? "Username invalid" : ""}
+        error={loginErrors && loginErrors.Username.length > 0 ? loginErrors.Username : ''}
       />
 
       {/* Email Input with Error Handling */}
@@ -121,9 +114,8 @@ function LoginForm() {
         value={password}
         onChange={(e) => {
           setPassword(e.target.value);
-          setPasswordInvalid(false);
         }}
-        error={passwordInvalid ? "Incorrect password" : ''}
+        error={loginErrors && loginErrors.Password.length > 0 ? loginErrors.Password : ''}
       />
 
       <Redirect

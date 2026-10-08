@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Redirect } from '../components/Redirect.tsx'
 import { Input } from '../components/Input.tsx'
 import { Form, Button } from 'react-bootstrap'
+import { type RegisterError, validateRegister, falseRegister } from '../utils/validateRegister.ts'
 
 //to be replaced with actual register content
 export function RegisterPage() {
@@ -25,19 +26,35 @@ function RegisterForm() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
 
-  const [passwordsNotEqual, setPasswordsNotEqual] = useState(false);
+  const [registerErrors, setRegisterErrors] = useState<RegisterError | undefined>(undefined);
   const [error, setError] = useState('');
 
   const handleSubmit = (e : React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setPasswordsNotEqual(false);
+    const currentFirstName = firstName.trim();
+    const currentLastName = lastName.trim();
+    const currentEmail = email.trim();
+    const currentPhoneNumber = phoneNumber.trim();
+    const currentUsername = username.trim();
+    const currentPassword = password1.trim();
+    const currentPassword2 = password2.trim();
 
-    const passwordsNotEqual = password1 !== password2;
+    const freshErrors: RegisterError = {
+      FirstName : currentFirstName === "" ? "First name is not present" : "",
+      LastName : currentLastName === "" ? "Last name is not present" : "",
+      Email : currentEmail === "" ? "Email is not present" : "",
+      PhoneNumber : currentPhoneNumber === "" ? "Phone number is not present" : "",
+      Username : currentUsername === "" ? "Username is not present" : "",
+      Password : currentPassword === "" ? "Password is not present" : "",
+      Password2 : currentPassword2 === "" ? "Password confirmation is not present" : ""
+    }
 
-    if (passwordsNotEqual) {
-      setPasswordsNotEqual(true);
-      return;
+    setRegisterErrors(freshErrors);
+    
+    if (falseRegister(freshErrors)) {
+      setError("Please fill out all required fields.");
+      return; 
     }
 
     setError('');
@@ -53,7 +70,7 @@ function RegisterForm() {
         placeholder="John"
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
-        error={error} 
+        error={registerErrors && registerErrors.FirstName.length > 0 ? registerErrors.FirstName : ""} 
       />
 
       <Input 
@@ -63,7 +80,7 @@ function RegisterForm() {
         placeholder="Doe"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-        error={error} 
+        error={registerErrors && registerErrors.LastName.length > 0 ? registerErrors.LastName : ""}  
       />
 
       <Input 
@@ -73,7 +90,7 @@ function RegisterForm() {
         placeholder="johndoe@gmail.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        error={error} 
+        error={registerErrors && registerErrors.Email.length > 0 ? registerErrors.Email : ""}  
       />
 
       <Input 
@@ -83,7 +100,7 @@ function RegisterForm() {
         placeholder="123-456-7890"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
-        error={error} 
+        error={registerErrors && registerErrors.PhoneNumber.length > 0 ? registerErrors.PhoneNumber : ""} 
       />
 
       <Input 
@@ -93,7 +110,7 @@ function RegisterForm() {
         placeholder="jdoe123"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        error={error} 
+        error={registerErrors && registerErrors.Username.length > 0 ? registerErrors.Username : ""} 
       />
 
       <Input 
@@ -104,9 +121,8 @@ function RegisterForm() {
         value={password1}
         onChange={(e) => {
           setPassword1(e.target.value);
-          setPasswordsNotEqual(false);
         }}
-        error={passwordsNotEqual ? "Passwords not equal" : ''} 
+        error={registerErrors && registerErrors.Password.length > 0 ? registerErrors.Password : ""} 
       />
 
       <Input 
@@ -117,9 +133,8 @@ function RegisterForm() {
         value={password2}
         onChange={(e) => {
           setPassword2(e.target.value);
-          setPasswordsNotEqual(false);
         }}
-        error={passwordsNotEqual ? "Passwords not equal" : ''}
+        error={registerErrors && registerErrors.Password2.length > 0 ? registerErrors.Password2 : ""} 
       />
 
       <Redirect
