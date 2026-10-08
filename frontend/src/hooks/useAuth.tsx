@@ -6,12 +6,11 @@ import type { User } from '../models/models';
 
 // to be replaced with mock user data from userServices.
 const FAKE_USER: User = {
-  'User Id': 123,
-  'First Name': 'John',
-  'Last Name': 'Smith',
-  'Phone Number': '201-555-1234',
-  'Email': 'johnsmith@example.com',
-  'Username': 'johnsmith',
+  FirstName: 'John',
+  LastName: 'Smith',
+  Email: 'john.smith@example.com',
+  PhoneNumber: '201-123-4567',
+  Username: 'johnsmith',
 };
 
 export interface AuthResult {
