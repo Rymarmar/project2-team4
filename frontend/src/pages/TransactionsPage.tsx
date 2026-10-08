@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Alert, Card, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { StatCard } from '../components/StatCard';
@@ -71,10 +70,6 @@ export function TransactionsPage() {
           <h1>Transactions</h1>
           <p className="text-muted mb-0">Manage your money, {user?.Username}.</p>
         </div>
-        <nav aria-label="Transaction navigation" className="d-flex flex-wrap gap-3">
-          <Link to="/dashboard">Back to Dashboard</Link>
-          <Link to="/transaction-history">Transaction History</Link>
-        </nav>
       </div>
 
       {loading ? <LoadingSpinner label="Loading your accounts…" /> : error ? (
