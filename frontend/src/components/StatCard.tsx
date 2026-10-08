@@ -1,4 +1,5 @@
 import { Card } from 'react-bootstrap'
+import { formatCurrency } from '../utils/formatCurrency'
 
 // Defines the information this component expects
 interface StatCardProps {
@@ -7,10 +8,7 @@ interface StatCardProps {
 }
 
 export function StatCard({ label, balance }: StatCardProps) {
-  const formattedBalance = new Intl.NumberFormat('en-US', { // formats such number as 1000 as $1,000.00
-    style: 'currency',
-    currency: 'USD',
-  }).format(balance)
+  const formattedBalance = formatCurrency(balance)
 
   return (
     <Card className="h-100 shadow-sm">
