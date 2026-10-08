@@ -48,7 +48,6 @@ export function TransactionsPage() {
   async function handleTransaction(request: NewTransaction) {
     try {
       const response = await AccountService.updateAccountBalances(1, request);
-      // The mock method includes a success message in `error`; use its status.
       if (response.status !== 200 || !response.data) {
         throw new Error(response.error || 'Unable to complete the transaction.');
       }
