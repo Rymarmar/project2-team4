@@ -1,7 +1,6 @@
 import { Table } from 'react-bootstrap'
 import type { Transaction } from '../models/models'
 import { formatCurrency } from '../utils/formatCurrency'
-import './TransactionList.css'
 
 
 interface TransactionListProps {
