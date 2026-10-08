@@ -10,7 +10,7 @@ import { type LoginError, falseLogin } from '../utils/validateLogin.ts'
 export function LoginPage() {
   return (
     <div className="container py-5">
-      <h1>Welcome back to 50/50 Bank</h1>
+      <h1>Welcome back to W.A.R. Bank</h1>
 
       {/* Basic login form using the Input framework */}
       <LoginForm />

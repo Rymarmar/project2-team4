@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 export function RegisterPage() {
   return (
     <div className="container py-5">
-      <h1>Register for 50/50 Bank</h1>
+      <h1>Register for W.A.R Bank</h1>
 
       {/* Basic Bootstrap form for testing purposes */} 
       <RegisterForm />
