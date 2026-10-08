@@ -1,5 +1,6 @@
 import { Table } from 'react-bootstrap'
 import type { Transaction } from '../models/models'
+import { formatCurrency } from '../utils/formatCurrency'
 
 interface TransactionListProps {
   transactions: Transaction[]
@@ -10,10 +11,6 @@ export function TransactionList({
   transactions,
   title = 'Recent transactions',
 }: TransactionListProps) {
-  const currency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  })
 
   return (
     <section className="mt-4 text-start">
@@ -41,7 +38,7 @@ export function TransactionList({
                 <td>{transaction.Date}</td>
                 <td>{transaction.TransactionType}</td>
                 <td className="text-end">
-                  {currency.format(transaction.Amount)}
+                  {formatCurrency(transaction.Amount)}
                 </td>
               </tr>
             ))}
