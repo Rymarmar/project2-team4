@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
 import { Alert, Form } from 'react-bootstrap';
-import type { Account, TransactionRequest } from '../models/models';
+import type { Account, NewTransaction } from '../models/models';
 import { validateAmount, validateTransfer } from '../utils/validator';
 import { Button } from './Button';
 import { Input } from './Input';
@@ -8,7 +8,7 @@ import { Input } from './Input';
 interface TransactionFormProps {
   accounts: Account[];
   // Resolve after a successful transaction; reject with an error on failure.
-  onSubmit: (request: TransactionRequest) => Promise<void>;
+  onSubmit: (request: NewTransaction) => Promise<void>;
 }
 
 interface FormErrors {
@@ -26,7 +26,7 @@ const currency = new Intl.NumberFormat('en-US', {
 export function TransactionForm({ accounts, onSubmit }: TransactionFormProps) {
   const id = useId();
   const submitting = useRef(false);
-  const [type, setType] = useState<TransactionRequest['TransactionType']>('Deposit');
+  const [type, setType] = useState<NewTransaction['TransactionType']>('Deposit');
   const [accountId, setAccountId] = useState('');
   const [destinationId, setDestinationId] = useState('');
   const [amount, setAmount] = useState('');
@@ -55,7 +55,7 @@ export function TransactionForm({ accounts, onSubmit }: TransactionFormProps) {
     setErrors(nextErrors);
     if (Object.values(nextErrors).some(Boolean)) return;
 
-    const request: TransactionRequest = {
+    const request: NewTransaction = {
       TransactionType: type,
       Amount: Number(amount.trim()),
       OriginID: type === 'Deposit' ? null : Number(accountId),
@@ -93,7 +93,7 @@ export function TransactionForm({ accounts, onSubmit }: TransactionFormProps) {
         <Form.Group className="mb-3" controlId={`${id}-type`}>
           <Form.Label>Transaction type</Form.Label>
           <Form.Select value={type} onChange={(event) => {
-            setType(event.target.value as TransactionRequest['TransactionType']);
+            setType(event.target.value as NewTransaction['TransactionType']);
             setDestinationId('');
             setErrors({});
           }}>

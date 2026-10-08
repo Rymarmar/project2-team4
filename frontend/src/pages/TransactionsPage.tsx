@@ -7,9 +7,8 @@ import { StatCard } from '../components/StatCard';
 import { TransactionForm } from '../components/TransactionForm';
 import { useToast } from '../components/ToastProvider';
 import { useAuth } from '../hooks/useAuth';
-import type { Account, TransactionRequest } from '../models/models';
+import type { Account, NewTransaction } from '../models/models';
 import { AccountService } from '../service/AccountService';
-import { TransactionService } from '../service/TransactionService';
 
 async function loadAccounts(): Promise<Account[]> {
   const response = await AccountService.getAccountsByUsername(1);
@@ -46,12 +45,14 @@ export function TransactionsPage() {
     return () => { active = false; };
   }, [attempt]);
 
-  async function handleTransaction(request: TransactionRequest) {
+  async function handleTransaction(request: NewTransaction) {
     try {
-      const response = await TransactionService.putTransaction(request);
-      if (response.error || response.status !== 201 || !response.data) {
+      const response = await AccountService.updateAccountBalances(1, request);
+      // The mock method includes a success message in `error`; use its status.
+      if (response.status !== 200 || !response.data) {
         throw new Error(response.error || 'Unable to complete the transaction.');
       }
+      setAccounts(response.data.Accounts);
     } catch (reason) {
       const message = reason instanceof Error ? reason.message : 'Transaction failed. Please try again.';
       showToast('danger', message);
@@ -62,12 +63,6 @@ export function TransactionsPage() {
       style: 'currency', currency: 'USD',
     }).format(request.Amount)} completed successfully.`);
 
-    // A refresh failure must not make a completed payment look like a failed payment.
-    try {
-      setAccounts(await loadAccounts());
-    } catch {
-      showToast('warning', 'Transaction completed, but balances could not refresh. Reload the page to see updated balances.');
-    }
   }
 
   return (
