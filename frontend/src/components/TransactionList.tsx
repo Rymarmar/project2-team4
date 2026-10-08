@@ -1,17 +1,32 @@
 import { Table } from 'react-bootstrap'
 import type { Transaction } from '../models/models'
 import { formatCurrency } from '../utils/formatCurrency'
+import './TransactionList.css'
+
 
 interface TransactionListProps {
   transactions: Transaction[]
   title?: string
   showAccountIds?: boolean
+  colorByType?: boolean
 }
+
+const ROW_CLASS_BY_TYPE: Record<string, string> = {
+  Deposit: 'table-success',
+  Withdraw: 'table-danger',
+  Transfer: 'table-info',
+}
+
+function rowClassFor(type: Transaction['TransactionType']): string {
+  return ROW_CLASS_BY_TYPE[String(type)] ?? ''
+}
+
 
 export function TransactionList({
   transactions,
   title = 'Recent transactions',
-  showAccountIds = false
+  showAccountIds = false,
+    colorByType = false
 }: TransactionListProps) {
 
   return (
@@ -28,7 +43,7 @@ export function TransactionList({
             <tr>
               <th scope="col">Date</th>
               <th scope="col">Type</th>
-              <th scope="col" className="text-end">
+              <th scope="col" className="text-end" >
                 Amount
               </th>
               {showAccountIds && (
@@ -41,9 +56,13 @@ export function TransactionList({
           </thead>
 
           <tbody>
-            {transactions.map((transaction) => (
-              <tr key={transaction.ID}>
-                <td>{transaction.Date}</td>
+          {transactions.map((transaction) => (
+              <tr
+                  key={transaction.ID}
+                  className={colorByType ? rowClassFor(transaction.TransactionType) : undefined}
+              >
+
+              <td>{transaction.Date}</td>
                 <td>{transaction.TransactionType}</td>
                 <td className="text-end">
                   {formatCurrency(transaction.Amount)}

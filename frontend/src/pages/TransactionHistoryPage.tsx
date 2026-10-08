@@ -26,7 +26,7 @@ export function TransactionHistoryPage() {
 
     return (
         <Container className="py-4">
-            <h1 className="mb-4 text-dark">Transaction history</h1>
+            {/*<h1 className="mb-4 text-dark">Transaction history</h1>*/}
             <Row className="g-3">
                 <Col xs={12}>
                     {transactionsLoading ? (
@@ -36,7 +36,7 @@ export function TransactionHistoryPage() {
                             {transactionsError}
                         </Alert>
                     ) : (
-                        <TransactionList transactions={pageTransactions} title={"All Transactions"} showAccountIds={true}/>
+                        <TransactionList transactions={pageTransactions} title={"All Transactions"} showAccountIds={true} colorByType={true}/>
                     )}
                 </Col>
             </Row>
