@@ -31,13 +31,6 @@ export interface AccountList{
     "Accounts": Account[]
 }
 
-export interface TransactionRequest{
-    "TransactionType": 'Deposit' | 'Withdraw' | 'Transfer';
-    "Amount": number;
-    "OriginID": number | null;
-    "DestinationID": number | null;
-}
-
 export interface Transaction{
     "Date": string;
     "TransactionType": 'Deposit' | 'Withdraw' | 'Transfer';
@@ -65,5 +58,4 @@ export interface NewTransaction{
     "OriginID": number | null;
     "DestinationID": number | null;
 }
-
 
