@@ -4,6 +4,7 @@ import { StatCard } from '../components/StatCard'
 import { TransactionList } from '../components/TransactionList'
 import { AccountService } from '../service/AccountService'
 import { TransactionService } from '../service/TransactionService'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 import type { Account, Transaction } from '../models/models'
 
 export function DashboardPage() {
@@ -98,7 +99,7 @@ export function DashboardPage() {
       <h1 className="mb-4 text-dark">Your dashboard</h1>
 
       {loading ? (
-        <p role="status">Loading your accounts...</p>
+        <LoadingSpinner label="Loading your accounts..." />
       ) : error ? (
         <Alert variant="danger">{error}</Alert>
       ) : accounts.length === 0 ? (
@@ -117,9 +118,7 @@ export function DashboardPage() {
       )}
 
       {transactionsLoading ? (
-        <p className="mt-4" role="status">
-          Loading recent transactions...
-        </p>
+        <LoadingSpinner label="Loading recent transactions..." />
       ) : transactionsError ? (
         <Alert variant="danger" className="mt-4">
           {transactionsError}
