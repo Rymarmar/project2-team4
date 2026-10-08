@@ -1,21 +1,14 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-import type { User } from '../models/models';
-// import { MOCK_USER } from '../services';
+import { useContext } from "react";
+import { AuthContext, type AuthContextValue } from "./authProvider.tsx";
 
-// to be replaced with the acutal implementation of authUser
-
-// to be replaced with mock user data from userServices.
-const FAKE_USER: User = {
-  FirstName: 'John',
-  LastName: 'Smith',
-  Email: 'john.smith@example.com',
-  PhoneNumber: '201-123-4567',
-  Username: 'johnsmith',
-};
-
-export interface AuthResult {
-  ok: boolean;
-  error: string | null;
+// A thin accessor: all state and logic live in <AuthProvider>, so every
+// component that calls useAuth() sees the same user.
+export function useAuth(): AuthContextValue {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used inside an <AuthProvider>");
+  }
+  return context;
 }
 
 interface AuthContextValue {
