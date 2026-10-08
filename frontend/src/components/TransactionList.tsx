@@ -5,11 +5,13 @@ import { formatCurrency } from '../utils/formatCurrency'
 interface TransactionListProps {
   transactions: Transaction[]
   title?: string
+  showAccountIds?: boolean
 }
 
 export function TransactionList({
   transactions,
   title = 'Recent transactions',
+  showAccountIds = false
 }: TransactionListProps) {
 
   return (
@@ -29,6 +31,12 @@ export function TransactionList({
               <th scope="col" className="text-end">
                 Amount
               </th>
+              {showAccountIds && (
+                  <>
+                    <th scope="col">Origin ID</th>
+                    <th scope="col">Destination ID</th>
+                  </>
+              )}
             </tr>
           </thead>
 
@@ -40,6 +48,12 @@ export function TransactionList({
                 <td className="text-end">
                   {formatCurrency(transaction.Amount)}
                 </td>
+                {showAccountIds && (
+                    <>
+                      <td>{transaction.OriginID ?? '---'}</td>
+                      <td>{transaction.DestinationID ?? '---'}</td>
+                    </>
+                )}
               </tr>
             ))}
           </tbody>
