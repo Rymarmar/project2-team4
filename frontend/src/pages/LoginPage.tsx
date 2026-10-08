@@ -1,8 +1,10 @@
 import { AuthCard } from '../components/AuthCard.tsx';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { Input } from '../components/Input.tsx'; // Adjust the import path based on your file structure
 import { Redirect } from '../components/Redirect.tsx'
+import { UserService } from '../service/UserService'
+import type { User, RegisterRequest, LoginRequest } from '../models/models'
 
 // to be replaced with actual login content
 export function LoginPage() {
@@ -37,13 +39,49 @@ function LoginForm() {
   const [usernameInvalid, setUsernameInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
 
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadAccountInfo() {
+      try {
+        const response = await UserService.logIn(1)
+
+        if (!active) return
+
+        if (response.error || !response.data) {
+          setError(response.error ?? 'Unable to load account information')
+        } else {
+          setUser(response.data)
+        }
+      } catch {
+        if (active) {
+          setError('Unable to load user. Please try again')
+        }
+      }
+    }
+
+    loadAccountInfo();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const handleSubmit = (e : React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!user) {
+      setError("User data is still loading.")
+      return
+    }
 
     setUsernameInvalid(false);
     setPasswordInvalid(false);
 
-    const isUsernameWrong = username !== "johnsmith";
+    const isUsernameWrong = username !== user.Username;
     const isPasswordWrong = password !== "secretpassword123";
 
     if (isUsernameWrong || isPasswordWrong) {
