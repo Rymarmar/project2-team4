@@ -44,6 +44,7 @@ export interface Transaction{
     "Amount": number;
     "OriginID": number | null;
     "DestinationID": number | null;
+    "ID": number;
 }
 
 export interface TransactionList{
@@ -58,6 +59,11 @@ export interface APIResponse<T>{
 
 
 
-
+export interface NewTransaction{
+    "TransactionType": 'Deposit' | 'Withdraw' | 'Transfer';
+    "Amount": number;
+    "OriginID": number | null;
+    "DestinationID": number | null;
+}
 
 
