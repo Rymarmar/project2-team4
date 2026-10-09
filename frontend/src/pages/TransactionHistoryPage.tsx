@@ -26,7 +26,8 @@ export function TransactionHistoryPage() {
 
     return (
         <Container className="py-4">
-            {/*<h1 className="mb-4 text-dark">Transaction history</h1>*/}
+            <div className="content-panel">
+            {/*<h1 className="mb-4 text-dark">Transaction History</h1>*/}
             <Row className="g-3">
                 <Col xs={12}>
                     {transactionsLoading ? (
@@ -66,6 +67,7 @@ export function TransactionHistoryPage() {
                     </Col>
                 </Row>
             )}
+            </div>
         </Container>
     );
 }

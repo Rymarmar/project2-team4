@@ -29,7 +29,7 @@ export function AppNavBar() {
     <Navbar bg="light" expand="md" collapseOnSelect>
       <Container>
         <Navbar.Brand as={NavLink} to="/dashboard">
-          50/50 Bank
+          Reactive Banking
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="bank-navigation" />

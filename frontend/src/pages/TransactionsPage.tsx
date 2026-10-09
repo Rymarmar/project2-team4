@@ -65,6 +65,7 @@ export function TransactionsPage() {
 
   return (
     <main className="container py-4 py-md-5">
+      <div className="content-panel">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
           <h1>Transactions</h1>
@@ -85,7 +86,7 @@ export function TransactionsPage() {
         <Row className="g-4">
           <Col xs={12} lg={5}>
             <section aria-label="Account balances">
-              <h2 className="h5 mb-3">Your accounts</h2>
+              <h2 className="h5 mb-3">Your Accounts</h2>
               <Row className="g-3">
                 {accounts.map((account) => (
                   <Col xs={12} sm={6} lg={12} key={account.AccountNumber}>
@@ -107,6 +108,7 @@ export function TransactionsPage() {
           </Col>
         </Row>
       )}
+      </div>
     </main>
   );
 }

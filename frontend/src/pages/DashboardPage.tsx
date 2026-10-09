@@ -51,7 +51,8 @@ export function DashboardPage() {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4 text-dark">Your dashboard</h1>
+      <div className="content-panel">
+      <h1 className="mb-4 text-dark">Your Dashboard</h1>
 
       {loading ? (
         <LoadingSpinner label="Loading your accounts..." />
@@ -81,6 +82,7 @@ export function DashboardPage() {
       ) : (
         <TransactionList transactions={transactions} />
       )}
+      </div>
     </Container>
   )
 }
