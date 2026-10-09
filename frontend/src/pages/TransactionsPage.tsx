@@ -86,7 +86,7 @@ export function TransactionsPage() {
         <Row className="g-4">
           <Col xs={12} lg={5}>
             <section aria-label="Account balances">
-              <h2 className="h5 mb-3">Your accounts</h2>
+              <h2 className="h5 mb-3">Your Accounts</h2>
               <Row className="g-3">
                 {accounts.map((account) => (
                   <Col xs={12} sm={6} lg={12} key={account.AccountNumber}>

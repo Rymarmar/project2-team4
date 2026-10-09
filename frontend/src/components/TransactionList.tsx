@@ -23,7 +23,7 @@ function rowClassFor(type: Transaction['TransactionType']): string {
 
 export function TransactionList({
   transactions,
-  title = 'Recent transactions',
+  title = 'Recent Transactions',
   showAccountIds = false,
     colorByType = false
 }: TransactionListProps) {

@@ -88,7 +88,7 @@ export function TransactionForm({ accounts, onSubmit }: TransactionFormProps) {
       )}
 
       <fieldset disabled={loading || accounts.length === 0}>
-        <legend className="h4">Make a transaction</legend>
+        <legend className="h4">Make a Transaction</legend>
 
         <Form.Group className="mb-3" controlId={`${id}-type`}>
           <Form.Label>Transaction type</Form.Label>
