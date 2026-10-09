@@ -51,6 +51,7 @@ export function DashboardPage() {
 
   return (
     <Container className="py-4">
+      <div className="content-panel">
       <h1 className="mb-4 text-dark">Your dashboard</h1>
 
       {loading ? (
@@ -81,6 +82,7 @@ export function DashboardPage() {
       ) : (
         <TransactionList transactions={transactions} />
       )}
+      </div>
     </Container>
   )
 }

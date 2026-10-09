@@ -65,6 +65,7 @@ export function TransactionsPage() {
 
   return (
     <main className="container py-4 py-md-5">
+      <div className="content-panel">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
           <h1>Transactions</h1>
@@ -107,6 +108,7 @@ export function TransactionsPage() {
           </Col>
         </Row>
       )}
+      </div>
     </main>
   );
 }

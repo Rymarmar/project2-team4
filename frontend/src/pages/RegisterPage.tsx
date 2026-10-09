@@ -10,10 +10,12 @@ import { useToast } from '../components/ToastProvider';
 export function RegisterPage() {
   return (
     <div className="container py-5">
-      <h1>Register for W.A.R Bank</h1>
+      <div className="content-panel auth-panel">
+      <h1>Register for Reactive Banking</h1>
 
       {/* Basic Bootstrap form for testing purposes */} 
       <RegisterForm />
+      </div>
       
     </div>
   );

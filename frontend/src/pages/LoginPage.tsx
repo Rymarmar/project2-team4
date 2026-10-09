@@ -14,7 +14,8 @@ export function LoginPage() {
 
   return (
     <div className="container py-5">
-      <h1>Welcome back to W.A.R. Bank</h1>
+      <div className="content-panel auth-panel">
+      <h1>Welcome back to Reactive Banking</h1>
 
       {/* Basic login form using the Input framework */}
       <LoginForm />
@@ -32,6 +33,7 @@ export function LoginPage() {
       */}
 
       <hr />
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { RegisterPage } from './pages/RegisterPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { TransactionsPage } from './pages/TransactionsPage'
 import { TransactionHistoryPage } from './pages/TransactionHistoryPage'
+import { VideoBackground } from './components/VideoBackground'
 
 function AppLayout() {
   return (
@@ -18,6 +19,9 @@ function AppLayout() {
 
 function App() {
   return (
+    <>
+    <VideoBackground src={`${import.meta.env.BASE_URL}ocean-background.mp4`} />
+    <div className="app-content">
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
@@ -36,6 +40,8 @@ function App() {
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </div>
+    </>
   )
 }
 
